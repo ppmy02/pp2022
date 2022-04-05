@@ -1,199 +1,292 @@
 import math
 import numpy as np
 
-class Student:
-    def __init__(self, name, s_id, dob):
-        self._st_Name = name
-        self._st_ID = s_id
-        self._st_DoB = dob
+class InitStudent:
+    def __init__(self, StdManagment, student_id, name, date_of_birth):
+        self.stdID = student_id
+        self.stdName = name
+        self.dob = date_of_birth
+        StdManagment.std_info_list.append(self)
+        StdManagment.std_id_list.append(self.stdID)
 
-    def set_st_name(self, name):
-        self._st_Name = name
+    def getStudentID(self):
+        return self.stdID
 
-    def set_st_id(self, std_id):
-        self._st_ID = std_id
+    def getName(self):
+        return self.stdName
 
-    def set_st_dob(self, dob):
-        self._st_DoB = dob
+    def getDOB(self):
+        return self.dob
 
-    def get_st_name(self):
-        return self._st_Name
+    def setGPA(self, gpa):
+        self.gpa = gpa
 
-    def get_st_id(self):
-        return self._st_ID
+    def getGPA(self):
+        return self.gpa
 
-    def get_st_dob(self):
-        return self._st_DoB
+class InitCourse:
+    def __init__(self, StdManagment, course_id, name, credit):
+        self.courseID = course_id
+        self.stdName = name
+        self.credit = credit
+        StdManagment.courses_list.append(self)
+        StdManagment.courses_id_list.append(self.courseID)
 
-class Course:
-    def __init__(self, name, c_id, cre):
-        self._name = name
-        self._id = c_id
-        self._cre = cre
+    def getCourseID(self):
+        return self.courseID
 
-    def set_c_name(self, name):
-        self._name = name
+    def getName(self):
+        return self.stdName
 
-    def set_c_id(self, c_id):
-        self._id = c_id
+    def getCredit(self):
+        return  self.credit
 
-    def get_name(self):
-        return self._name
+class InitMark:
+    def __init__(self, StdManagment, student_id, course_id, student_mark):
+        self.stdID = student_id
+        self.courseID = course_id
+        self.stdMark = student_mark
+        StdManagment.marks_list.append(self)
 
-    def get_id(self):
-        return self._id
+    def getStudentID(self):
+        return self.stdID
 
-    def get_cre(self):
-        return self._cre
+    def getCourseID(self):
+        return self.courseID
 
-    def set_cre(self, cre):
-        self._cre = cre
+    def getStudentMark(self):
+        return self.stdMark
 
-class StdManangement:
-    _st_Name = ""
-    _crs_Inf = {}
+class StdManagement:
 
-    def __init__(self):
-        pass
+    std_id_list = []
+    std_info_list = []
+    courses_list = []
+    courses_id_list = []
+    marks_list = []
+    number_std = None
+    num_of_courses = None
 
-    def set_st_name(self, student_name):
-        self._st_Name = student_name
-
-    def get_st_name(self):
-        return self._st_Name
-
-    def set_crs_inf(self, dic_inf):
-        self._crs_Inf = dic_inf
-
-    def get_crs_inf(self):
-        return self._crs_Inf
-
-st_list = [Student("T", "T", "T")]
-course_list = [Course("T", "T","T")]
-stdm_list = [StdManangement()]
-mark_dict = {}
-
-st_list.clear()
-course_list.clear()
-stdm_list.clear()
-count_smm = 0
-
-def input_domain(value, min_value, max_value):
-    while value < min_value or value > max_value:
-        value = int(input("Your input is invalid! Enter again: "))
-    return value
-
-def SetStudent():
-    global i
-    num_of_st = int(input("Number of student in the class: "))
-    for i in range(0, num_of_st):
-        print(f"-Student number {i+1}-")
-        name = str(input("Student name: "))
-        s_id = str(input("Student ID: "))
-        dob = str(input("Student DoB: "))
-        st_list.append(Student(name, s_id, dob))
-
-def SetCourse():
-    global i
-    num_of_cour = int(input("Number of course: "))
-    for i in range(0, num_of_cour):
-        print(f"-Course number {i+1}-")
-        c_name = str(input("Course name: "))
-        c_id = str(input("Course id: "))
-        c_cre = int(input("Number of credit: "))
-        course_list.append(Course(c_name, c_id, c_cre))
-
-
-def SetMark():
-    global option, i, count_smm
-    name = str(input("Name of student you want to manage: "))
-    
-    if checkStList(name):
-        stdm_list.append(StdManangement())
-        stdm_list[count_smm].set_st_name(name)
-        num_of_cour = int(input("Number of courses this student studied: "))
-        for i in range(0, num_of_cour):
-            c_name = input("Name of course: ")
-            if checkCourseList(c_name):
-                mark = math.floor(int(input("Mark of this course: ")))
-                mark_dict[c_name] = mark
-                stdm_list[count_smm].set_crs_inf(mark_dict)
+def getNumOfStudents():
+        while True:
+            number_std = int(input("\nEnter number of students: "))
+            if number_std < 0:
+                print("\nNumber of students cannot be negative")
             else:
-                print("Input course did not import.")
-        count_smm = count_smm + 1
-    else:
-        option = int(input("Input wrong ! Press 3 to do again, 0 to quit: !"))
+                break
+        StdManagement.number_std = number_std
 
-def gpa():
-    all_marks = np.array([])
-    all_credits = np.array([])
-    while True:
-            name = str(input("Name of student to caculate: "))
-            if checkStList(name):
-                all_marks = np.append(stdm_list[count_smm].get_crs_inf(mark_dict))
-                all_credits =np.append(Course.get_cre)
-                gpa = np.dot(all_marks, all_credits) / np.sum(all_credits)
-                print(f"{name}'s GPA is {gpa}")
+def getNumOfCourses():
+        while True:
+            num_of_courses = int(input("\nEnter number of courses: "))
+            if num_of_courses < 0:
+                print("\nNumber of courses cannot be negative")
             else:
-                print("Student ID doesn't exist. Please try again")
+                break
+        StdManagement.num_of_courses = num_of_courses
+
+def getStudentInfo():
+        while True:
+            student_id = input("\nEnter student ID: ")
+            if student_id is None:
+                print("Student ID cannot be null!")
+            else:
+                break
+        if student_id in StdManagement.std_id_list:
+            print("Student ID already exists!")
+            exit()
+        else:
+            while True:
+                name = str(input("Enter student name: "))
+                if name is None:
+                    print("Student name cannot be null!")
+                else:
+                    break
+            while True:
+                dob = input("Enter student dob/ date of birth: ")
+                if dob is None:
+                    print("Student dob/ date of birth cannot be null!")
+                else:
+                    break
+            print(f"Added student {name}!")
+            InitStudent(StdManagement, student_id, name, dob)
+
+def getCourseInfo():
+        while True:
+            course_id = input("\nEnter course ID: ")
+            if course_id is None:
+                print("Course ID cannot be null!")
+            else:
+                break
+        if course_id in StdManagement.courses_id_list:
+            print("Course ID already exists!")
+            exit()
+        else:
+            name = input("Enter course name: ")
+            if name is None:
+                print("Course name cannot be null!")
+            while True:
+                credit = int(input("Enter course credits: "))
+                if credit < 0:
+                    print("Number of credits can not be negative!")
+                elif credit is None:
+                    print("Course credit cannot be null!")
+                else:
+                    break
+            print(f"Added course {name}!")
+            InitCourse(StdManagement, course_id, name, credit)
+
+def getCourseMark(course_id):
+        for student in StdManagement.std_info_list:
+            student_id = student.getStudentID()
+            studentName = student.getName()
+            m = math.floor(float(input(f"Enter marks for {studentName}: ")))
+            InitMark(StdManagement, student_id, course_id, m)
+
+def getMark():
+        while True:   
+            course_id = input("Enter the course ID for which you want to input marks: ")
+            if course_id in StdManagement.courses_id_list:
+                if len(StdManagement.marks_list) > 0:
+                    Marked = False
+                    for mark in StdManagement.marks_list:
+                        if mark.getCourseID() == course_id:
+                            print("You have already input marks for this course!")
+                            Marked = True
+                            break
+                    if not Marked:
+                        getCourseMark(course_id)
+                else:
+                    getCourseMark(course_id)
+                break
+            elif course_id is None:
+                print("Course ID cannot be null!")
+            else:
+                print("No course with such ID!")
+                return False
+def printCourses():
+        print("Printing all courses: ")
+        for course in StdManagement.courses_list:
+            print("ID = %s, %s" % (course.getCourseID(), course.getName()))
             
-def checkStList(name):
-    global i
+def printStudents():
+        print("Printing all Students in class:")
+        
+        for student in StdManagement.std_info_list:
+            print("%s %s %s" % (student.getStudentID(), student.getName(), student.getDOB()))
+            
+def printCourseMarks(course_id):
+        for mark in StdManagement.marks_list:
+            if mark.getCourseID() == course_id:
+                student_id = mark.getStudentID()
+                for student in StdManagement.std_info_list:
+                    if student.getStudentID() == student_id:
+                        print(f"%s %s %s" % (student.getStudentID(), student.getName(), mark.getStudentMark()))
+            
+def printMarks():
+        while True:      
+            course_id = input("Enter the course ID for which you want to list marks: ")
+            if course_id is None:
+                print("Course ID cannot be null")
+            else:
+                break
+        if course_id in StdManagement.courses_id_list:
+            printCourseMarks(course_id)
+        else:
+            print("There exist no course with that ID!")
+            return False
 
-    check = False
-    for i in st_list:
-        if name == i.get_st_name():
-            check = True
-    return check
+def computeGPA(sid):
+        marks_arr = np.array([])
+        course_credits = np.array([])
+        for mark in StdManagement.marks_list:
+            if mark.getStudentID() == sid:
+                for course in StdManagement.courses_list:
+                    if course.getCourseID() == mark.getCourseID():
+                        marks_arr = np.append(marks_arr, mark.getStudentMark())
+                        course_credits = np.append(course_credits, course.getCredit())
+        gpa = np.dot(marks_arr, course_credits) / np.sum(course_credits)
+        rounded_gpa = math.floor(gpa)
 
+        for student in StdManagement.std_info_list:
+            if student.getStudentID() == sid:
+                student.setGPA(rounded_gpa)
 
-def checkCourseList(c_name):
-    global i
-    for i in course_list:
-        if i.get_name() == c_name:
-            return True
+def PrintGPA():
+        while True:
+            sid = input("Enter student ID to compute the student GPA: ")
+            if len(sid) == 0 or sid is None:
+                print("Student ID cannot be null!")
+            elif sid not in StdManagement.std_id_list:
+                print("Student ID does not exist!")
+            else:
+                break
+        for student in StdManagement.std_info_list:
+            if student.getStudentID() == sid:
+                computeGPA(sid)
+                print("Student %s has GPA = %.1f" % (student.getName(), student.getGPA()))
+                
+                break
 
-print("Program started !!!")
+def printSortedList():
 
-def menu_option():
-    print("1. Set information of student: \n"
+        new_student_list = []
+        for student in StdManagement.std_info_list:
+            computeGPA(student.getStudentID())
+            new_student = (student.getStudentID(), student.getName(), student.getGPA())
+            new_student_list.append(new_student)
+            
+        dtype = [('sid', 'S10'), ('name', 'S30'), ('gpa', float)]
+        numpy_student_list = np.array(new_student_list, dtype=dtype)
+        sorted_student_list = np.sort(numpy_student_list, order='gpa')[::-1]
+
+        new_sorted_student_list = []
+        for student in sorted_student_list:
+            decoded_student = (student[0].decode(), student[1].decode(), student[2])
+            new_sorted_student_list.append(decoded_student)
+        for student in new_sorted_student_list:
+            print("ID = %s, %s, GPA = %s\n" % (student[0], student[1], student[2]))
+
+def menu():
+        print("1. Set information of student: \n"
           "2. Set information of course: \n"
           "3. Set mark for student by course:\n"
           "4. Get information of student: \n"
           "5. Get information of course: \n"
-          "6. Get information for student course management:\n"
-          "7. Get Gpa:\n"
-          "0. Quit.")
-
-    option = int(input())
-    return option    
+          "6. Print Mark:\n"
+          "7. Compute Gpa:\n"
+          "8. Sort List:\n"
+          "0. Quit!!")
+        option = int(input("Enter your choice: "))
+        return option    
 
 while True:
-    print("\n================================================")
-    print("Enter your choice")
-    option = menu_option()
+    print("\n================================================") 
+    option = menu()
     if option == 1:
-        SetStudent()
+        getNumOfStudents()
+        for i in range(StdManagement.number_std):
+            print(f"Student #{i + 1}:\n")
+            getStudentInfo()
     elif option == 2:
-        SetCourse()
+        getNumOfCourses()
+        for i in range(StdManagement.num_of_courses):
+            print(f"Course #{i + 1}:")
+            getCourseInfo()
     elif option == 3:
-        SetMark()
+        getMark()
     elif option == 4:
-        print("All information of student in class: ")
-        for i in st_list:
-            print("Student's name = " + i.get_st_name(), end=" || ID = ")
-            print(i.get_st_id(), end=" || DoB = " + i.get_st_dob())
+        printStudents()
     elif option == 5:
-        print("All information of course: ")
-        for i in course_list:
-            print("Course's name = " + i.get_name(), end=" || ID = ")
-            print(i.get_id())
+        printCourses()
     elif option == 6:
-        for i in stdm_list:
-            print("This is mark information of " + i.get_st_name() + ": ", end="")
-            print("\n",i.get_crs_inf())
+        printMarks()
     elif option == 7:
-        gpa()
+        PrintGPA()
+    elif option == 8:
+        printSortedList()
     else:
-        print("You choose quit!")
+        print("Quit")
         break
+
+
