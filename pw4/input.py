@@ -67,7 +67,7 @@ def getCourseInfo():
                 if credit < 0:
                     print("Number of credits can not be negative!")
                 elif credit is None:
-                    print("Course credit cannot be null!")
+                    print("Course credits cannot be null!")
                 else:
                     break
             print(f"Added course {name}!")
